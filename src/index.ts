@@ -7,6 +7,7 @@ import path from "path"
 import fs from "fs"
 import { diffDependencies } from "./packages"
 import { watch } from "./sync"
+import { getBasePath } from "./utils"
 // import program from "commander"
 
 const env = process.env.NODE_ENV
@@ -32,7 +33,7 @@ try {
 
 const syncers: any = []
 
-const baseDir = env === "development" ? path.join(__dirname, "../") : __dirname
+const baseDir = getBasePath()
 
 const config = program.config || "./local-sync.json"
 const configPath = path.join(baseDir, config)
