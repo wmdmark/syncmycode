@@ -1,0 +1,20 @@
+{
+  "include": ["src", "types"],
+  "compilerOptions": {
+    "module": "commonjs",
+    "lib": ["dom", "esnext"],
+    "outDir": "./lib",
+    "importHelpers": true,
+    "declaration": true,
+    "sourceMap": true,
+    "rootDir": "./src",
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+  }
+}
