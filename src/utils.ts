@@ -8,5 +8,5 @@ export const loadJSON = (filePath: string) => {
 }
 
 export const getBasePath = () => {
-  return env === "development" ? path.join(__dirname, "../") : __dirname
+  return path.resolve("./")
 }
