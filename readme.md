@@ -1,10 +1,10 @@
-# Local Sync
+# Sync My Code
 
 ---
 
 ## What
 
-Local Sync is an unorthodox but pragmatic way of sharing code between different projects and keeping them in sync. Think of it as a poor man's Bit.dev. 
+Sync My Code is an unorthodox but pragmatic way of sharing code between different projects and keeping them in sync. Think of it as a poor man's Bit.dev. 
 
 Here's what it does:
 
@@ -22,12 +22,12 @@ There may be a better way to do what we're doing here, but I haven't found any w
 # How
 
 ```
-npm install -g local-sync
+npm install -g syncmycode
 ```
 
 ### Setup a config file
 
-Create a `local-sync.json` file in the root of the project you want to sync code to. For each external project and an entry to `syncers` section
+Create a `sync.json` file in the root of the project you want to sync code to. For each external project and an entry to `syncers` section
 
 ```json
 {
@@ -49,7 +49,7 @@ Create a `local-sync.json` file in the root of the project you want to sync code
 ### Verify Setup
 
 ```
-local-sync --verify
+syncmycode --verify
 ```
 
 This will check your source paths as well as recommend any changes that need to be made to your local `package.json` projects to support the synced libraries.

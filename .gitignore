@@ -1,6 +1,6 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 /external
-local-sync.json
+sync.json
 
 # dependencies
 /node_modules

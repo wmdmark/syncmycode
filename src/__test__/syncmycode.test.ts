@@ -30,7 +30,7 @@ describe("Local Sync", () => {
   })
 
   it("should parse config", () => {
-    config = loadConfig(`${sourcePath}/local-sync.json`)
+    config = loadConfig(`${sourcePath}/sync.json`)
     expect(config).toBeDefined()
     expect(config.syncers.length).toEqual(1)
     expect(config.syncers[0].name).toEqual("some-ui-library")

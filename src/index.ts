@@ -38,7 +38,7 @@ try {
 }
 
 const baseDir = getBasePath()
-const configFile = program.config || "./local-sync.json"
+const configFile = program.config || "./sync.json"
 const configPath = path.join(baseDir, configFile)
 
 log(`✔ Loading config from... ${configPath}`)

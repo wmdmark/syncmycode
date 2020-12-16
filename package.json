@@ -1,16 +1,16 @@
 {
-  "name": "local-sync",
+  "name": "syncmycode",
   "version": "0.5.0",
   "author": "Mark Johnson <markjohnson@hey.com>",
   "main": "./lib/index.js",
   "bin": {
-    "local-sync": "./lib/index.js"
+    "syncmycode": "./lib/index.js"
   },
   "scripts": {
     "start": "NODE_ENV=development nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "create": "npm run build && npm run test",
     "build": "tsc -p .",
-    "local": "npm uninstall -g local-sync && npm i -g",
+    "local": "npm uninstall -g syncmycode && npm i -g",
     "test": "jest"
   },
   "devDependencies": {
