@@ -25,7 +25,7 @@ npm install -g @wmdmark/syncmycode
 
 ## 2) Setup a config file
 
-Create a `sync.json` file in the root of the project you want to sync code to. For each external project and an entry to `syncers` section.
+Create a `sync.json` file in the root of the project you want to sync code to. For each external project, add an entry to `syncers` section.
 
 Each syncer should have the following fields:
 
