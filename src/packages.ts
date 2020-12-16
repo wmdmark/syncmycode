@@ -28,6 +28,7 @@ export const diffPackages = (
   )
   let conflicts: any = []
   let additions: any = []
+  let needsSync: boolean = false
   externalSources.forEach((externalSource: string) => {
     const pkg = loadPackage(externalSource)
     const pkgDeps = pkg.dependencies
@@ -51,25 +52,39 @@ export const diffPackages = (
         if (!hasSatisfactoryVersion) {
           let resolution: any = {}
           // assume that the latetst version is best
-          if (semverGt(newVersion, currentVersion)) {
+          const isExternalNewer = semverGt(newVersion, currentVersion)
+          if (isExternalNewer) {
             resolution.version = newVersion
             resolution.source = pkg.name
             resolution.name = packageName
           } else {
             resolution = localDeps[packageName]
           }
+
           conflicts.push({
             source: pkg.name,
             name: packageName,
             version: newVersion,
             resolution,
+            newer: isExternalNewer,
           })
+
           localDeps[packageName] = resolution
         }
       }
     })
   })
   return { additions, conflicts, resolved: localDeps }
+}
+
+export const needsPackageSync = (packageDiff: any) => {
+  // Do we need to update the package.json?
+  if (packageDiff.additions.length > 0) return true
+  if (packageDiff.conflicts.length > 0) {
+    const newer = packageDiff.conflicts.filter((con: any) => con.newer === true)
+    return newer.length > 0
+  }
+  return false
 }
 
 export const diffDependencies = (sourcePath: string, syncers: Array<any>) => {

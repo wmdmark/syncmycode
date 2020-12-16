@@ -1,6 +1,8 @@
 import cpx from "cpx"
 import fs from "fs"
+import path from "path"
 import { compareSync } from "dir-compare"
+import { getBasePath } from "./utils"
 
 export const watch = (syncer: any) => {
   return new Promise((resolve, reject) => {
@@ -14,7 +16,8 @@ export const watch = (syncer: any) => {
 
     watcher.on("copy", (e) => {
       if (initialLoad) {
-        console.log(`${e.srcPath} -> ${e.dstPath}`)
+        const relPath = path.relative(getBasePath(), e.dstPath)
+        console.log(`🔄 ${e.dstPath}`)
       }
     })
 
@@ -32,8 +35,12 @@ export const watch = (syncer: any) => {
 export const diffLocalChanges = (syncer: any) => {
   const local = syncer.destination
   const external = syncer.source
-  const diff = compareSync(local, external, { compareDate: true })
-  return diff
+  const diff = compareSync(local, external, {
+    excludeFilter: ".DS_Store",
+    compareContent: true,
+  })
+  const differences = diff.diffSet?.filter((d: any) => d.state !== "equal")
+  return differences
 }
 
 export const syncDiff = (diffSet: any) => {
@@ -43,6 +50,6 @@ export const syncDiff = (diffSet: any) => {
   return { source, destination }
 }
 
-export const syncDiffSetBackToExternal = (diff: any) => {
-  return diff.diffSet.map(syncDiff)
+export const syncDiffSetBackToExternal = (differences: Array<any>) => {
+  return differences.map(syncDiff)
 }

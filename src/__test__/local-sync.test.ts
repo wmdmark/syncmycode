@@ -1,4 +1,9 @@
-import { loadPackage, diffPackages, syncDependencies } from "../packages"
+import {
+  loadPackage,
+  diffPackages,
+  syncDependencies,
+  needsPackageSync,
+} from "../packages"
 import path from "path"
 import fs from "fs"
 import { loadConfig } from "../config"
@@ -13,11 +18,15 @@ describe("Local Sync", () => {
     `${sourcePath}/package.json`,
     "utf-8"
   )
+  const buttonSourcePath = `${externalPath}/src/Button.js`
+  const buttonSourceCode = fs.readFileSync(buttonSourcePath, "utf-8")
   let config: any
 
-  afterAll(() => {
+  afterAll((done) => {
     fs.rmdirSync(`${sourcePath}/lib`, { recursive: true })
     fs.writeFileSync(`${sourcePath}/package.json`, currentPackageJSON, "utf-8")
+    fs.writeFileSync(buttonSourcePath, buttonSourceCode, "utf-8")
+    done()
   })
 
   it("should parse config", () => {
@@ -43,7 +52,7 @@ describe("Local Sync", () => {
     expect(diff.conflicts[0].resolution.source).toEqual("local")
   })
 
-  it("should sync package.json", async () => {
+  it("should sync package.json", () => {
     const sourcePackagePath = `${sourcePath}/package.json`
     const remotePackagePath = `${externalPath}/package.json`
     syncDependencies(sourcePath, config.syncers)
@@ -52,30 +61,30 @@ describe("Local Sync", () => {
     // TODO: figure out how this should work?
     expect(diff.conflicts.length).toEqual(2)
     expect(diff.additions.length).toEqual(0)
+    expect(needsPackageSync(diff)).toEqual(false)
   })
 
-  it("should sync external files", async () => {
+  const buttonLocalPath = `${sourcePath}/lib/ui-lib/Button.js`
+  it("should sync external files", async (done) => {
     let watcher: any = await watch(config.syncers[0])
-    const expectedPath = `${sourcePath}/lib/ui-lib/Button.js`
-    expect(fs.existsSync(expectedPath)).toEqual(true)
+    expect(fs.existsSync(buttonLocalPath)).toEqual(true)
     watcher.close()
+    done()
   })
 
   it("should detect source changes", () => {
-    const buttonPath = `${sourcePath}/lib/ui-lib/Button.js`
-    const code = fs.readFileSync(buttonPath, "utf-8")
+    const code = fs.readFileSync(buttonLocalPath, "utf-8")
     const updatedCode = code.replace("// TODO: ", "// DONE: ")
-    fs.writeFileSync(buttonPath, updatedCode, "utf-8")
-    const diff: any = diffLocalChanges(config.syncers[0])
-    expect(diff.same).toEqual(false)
+    fs.writeFileSync(buttonLocalPath, updatedCode, "utf-8")
+    const diffs: any = diffLocalChanges(config.syncers[0])
+    expect(diffs.length).toEqual(1)
   })
 
   it("should copy source changes back to external", () => {
-    let diff: any = diffLocalChanges(config.syncers[0])
-    expect(diff.same).toEqual(false)
-    const results = syncDiffSetBackToExternal(diff)
+    let diffs: any = diffLocalChanges(config.syncers[0])
+    const results = syncDiffSetBackToExternal(diffs)
     expect(results.length).toEqual(1)
-    diff = diffLocalChanges(config.syncers[0])
-    expect(diff.same).toEqual(true)
+    diffs = diffLocalChanges(config.syncers[0])
+    expect(diffs.length).toEqual(0)
   })
 })
