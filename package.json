@@ -1,6 +1,6 @@
 {
   "name": "@wmdmark/syncmycode",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "author": "Mark Johnson <wmdmark@gmail.com>",
   "main": "./lib/index.js",
   "bin": {
