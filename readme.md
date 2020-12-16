@@ -12,9 +12,11 @@ Here's what it does:
 
 # Why? 
 
-We needed a simple way to share our code libraries across multiple projects (and not just in a mono repo). We wanted a "native" developer experience where the library code changes are immediately built/hot reloaded just like local code. We needed a way to push changes from a local copy back to the source.
+* We needed a simple way to share our code libraries across multiple projects (and not just in a mono repo). 
+* We wanted a "native" developer experience where the library code changes are immediately built/hot reloaded just like local code. 
+* We needed a way to push changes from a local copy back to the source.
 
-There may be a better way to do what we're doing here, but I haven't found any with a good DX (Developer Experience) for our small team of devs. That said, this very well may not scale to larger teams.
+There may be a better way to do what we're doing here, but I haven't found any with a good [DX](https://css-tricks.com/what-is-developer-experience-dx/) for our small team of devs. That said, this very well may not scale to larger teams.
 
 # How
 
