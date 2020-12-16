@@ -1,4 +1,4 @@
-import { loadPackage, diffPackages } from "../packages"
+import { loadPackage, diffPackages, syncDependencies } from "../packages"
 import path from "path"
 import fs from "fs"
 import { loadConfig } from "../config"
@@ -9,11 +9,15 @@ const sleep = (time: number) => new Promise((r) => setTimeout(r, time))
 describe("Local Sync", () => {
   const sourcePath: string = path.join(__dirname, "./data/source-project")
   const externalPath: string = path.join(__dirname, "./data/external-project")
-
+  const currentPackageJSON = fs.readFileSync(
+    `${sourcePath}/package.json`,
+    "utf-8"
+  )
   let config: any
 
   afterAll(() => {
     fs.rmdirSync(`${sourcePath}/lib`, { recursive: true })
+    fs.writeFileSync(`${sourcePath}/package.json`, currentPackageJSON, "utf-8")
   })
 
   it("should parse config", () => {
@@ -39,7 +43,18 @@ describe("Local Sync", () => {
     expect(diff.conflicts[0].resolution.source).toEqual("local")
   })
 
-  it("should sync packages", async () => {
+  it("should sync package.json", async () => {
+    const sourcePackagePath = `${sourcePath}/package.json`
+    const remotePackagePath = `${externalPath}/package.json`
+    syncDependencies(sourcePath, config.syncers)
+    const diff = diffPackages(sourcePackagePath, remotePackagePath)
+    // 2 here because the react versions still don't match (the ones from UI are older)
+    // TODO: figure out how this should work?
+    expect(diff.conflicts.length).toEqual(2)
+    expect(diff.additions.length).toEqual(0)
+  })
+
+  it("should sync external files", async () => {
     let watcher: any = await watch(config.syncers[0])
     const expectedPath = `${sourcePath}/lib/ui-lib/Button.js`
     expect(fs.existsSync(expectedPath)).toEqual(true)

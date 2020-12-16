@@ -1,7 +1,9 @@
-import { getBasePath, loadJSON } from "./utils"
-const semverSatisfies = require("semver/functions/satisfies")
-const semverGt = require("semver/functions/gt")
-const coerce = require("semver/functions/coerce")
+import { loadJSON } from "./utils"
+import fs from "fs"
+import semverSatisfies from "semver/functions/satisfies"
+import semverGt from "semver/functions/gt"
+import coerce from "semver/functions/coerce"
+import sortPackageJson from "sort-package-json"
 
 export const loadPackage = (packagePath: string): any => {
   const data = loadJSON(packagePath)
@@ -50,7 +52,6 @@ export const diffPackages = (
           let resolution: any = {}
           // assume that the latetst version is best
           if (semverGt(newVersion, currentVersion)) {
-            // The current version is gra
             resolution.version = newVersion
             resolution.source = pkg.name
             resolution.name = packageName
@@ -63,16 +64,32 @@ export const diffPackages = (
             version: newVersion,
             resolution,
           })
+          localDeps[packageName] = resolution
         }
       }
     })
   })
-  return { additions, conflicts, all: localDeps }
+  return { additions, conflicts, resolved: localDeps }
 }
 
-export const diffDependencies = (syncers: Array<any>) => {
+export const diffDependencies = (sourcePath: string, syncers: Array<any>) => {
   return diffPackages(
-    `${getBasePath()}/package.json`,
+    `${sourcePath}/package.json`,
     ...syncers.map((syncer: any) => `${syncer.root}/package.json`)
   )
+}
+
+export const syncDependencies = (sourcePath: string, syncers) => {
+  const diff = diffDependencies(sourcePath, syncers)
+  const packagePath = `${sourcePath}/package.json`
+  const pkg: any = loadPackage(packagePath)
+  pkg.dependencies = Object.keys(diff.resolved).reduce(
+    (deps: any, packageName: string) => {
+      deps[packageName] = diff.resolved[packageName].version
+      return deps
+    },
+    {}
+  )
+  const packageJSON = sortPackageJson(JSON.stringify(pkg, null, 2))
+  fs.writeFileSync(packagePath, packageJSON, "utf-8")
 }
