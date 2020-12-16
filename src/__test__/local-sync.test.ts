@@ -2,7 +2,7 @@ import { loadPackage, diffPackages } from "../packages"
 import path from "path"
 import fs from "fs"
 import { loadConfig } from "../config"
-import { watch } from "../sync"
+import { diffLocalChanges, syncDiffSetBackToExternal, watch } from "../sync"
 
 const sleep = (time: number) => new Promise((r) => setTimeout(r, time))
 
@@ -46,10 +46,21 @@ describe("Local Sync", () => {
     watcher.close()
   })
 
-  it("should detect local changes", () => {
+  it("should detect source changes", () => {
     const buttonPath = `${sourcePath}/lib/ui-lib/Button.js`
     const code = fs.readFileSync(buttonPath, "utf-8")
     const updatedCode = code.replace("// TODO: ", "// DONE: ")
     fs.writeFileSync(buttonPath, updatedCode, "utf-8")
+    const diff: any = diffLocalChanges(config.syncers[0])
+    expect(diff.same).toEqual(false)
+  })
+
+  it("should copy source changes back to external", () => {
+    let diff: any = diffLocalChanges(config.syncers[0])
+    expect(diff.same).toEqual(false)
+    const results = syncDiffSetBackToExternal(diff)
+    expect(results.length).toEqual(1)
+    diff = diffLocalChanges(config.syncers[0])
+    expect(diff.same).toEqual(true)
   })
 })

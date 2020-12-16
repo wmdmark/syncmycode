@@ -1,4 +1,6 @@
 import cpx from "cpx"
+import fs from "fs"
+import { compareSync } from "dir-compare"
 
 export const watch = (syncer: any) => {
   return new Promise((resolve, reject) => {
@@ -25,4 +27,22 @@ export const watch = (syncer: any) => {
       return resolve(watcher)
     })
   })
+}
+
+export const diffLocalChanges = (syncer: any) => {
+  const local = syncer.destination
+  const external = syncer.source
+  const diff = compareSync(local, external, { compareDate: true })
+  return diff
+}
+
+export const syncDiff = (diffSet: any) => {
+  const source = `${diffSet.path1}/${diffSet.name1}`
+  const destination = `${diffSet.path2}/${diffSet.name2}`
+  fs.copyFileSync(source, destination)
+  return { source, destination }
+}
+
+export const syncDiffSetBackToExternal = (diff: any) => {
+  return diff.diffSet.map(syncDiff)
 }
