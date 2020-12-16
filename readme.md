@@ -5,9 +5,9 @@ Sync My Code is an unorthodox but pragmatic way of sharing code between differen
 
 Here's what it does:
 
-1. *Copies* external project source code to your local project (the actual source code, not build files.)
-2. Checks `package.json` mismatches and lets you know what you need to add or upgrade. Can upgrade for you if you tell it to.
-3. Allows syncing newer changes from your local copy back to the external projects or reverting them back to the external source.
+1. Watches and copies external project source code to your local project.
+2. Checks your local `package.json` for mismatches and optionally updates it for you.
+3. Allows syncing changes from your local copy back to the external projects or reverting them back to the external source.
 
 
 # Why? 
