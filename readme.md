@@ -22,7 +22,7 @@ There may be a better way to do what we're doing here, but I haven't found any w
 # How
 
 ```
-npm install -g syncmycode
+npm install -g @wmdmark/syncmycode
 ```
 
 ### Setup a config file
