@@ -20,7 +20,7 @@ let watchers
 
 clear()
 console.log(
-  chalk.blueBright(figlet.textSync("local-sync", { horizontalLayout: "full" }))
+  chalk.blueBright(figlet.textSync("smc", { horizontalLayout: "full" }))
 )
 
 program
@@ -41,10 +41,15 @@ const baseDir = getBasePath()
 const configFile = program.config || "./sync.json"
 const configPath = path.join(baseDir, configFile)
 
-log(`✔ Loading config from... ${configPath}`)
+log(`✔ Loading config from ${path.relative(baseDir, configPath)}`)
 let config: any = loadConfig(configPath)
 
-log(`Syncing to ${config.syncers.length} sources: `)
+log(
+  `Syncing ${config.syncers.length} source${
+    config.syncers.length !== 1 ? "s" : ""
+  }`
+)
+
 config.syncers.forEach((sync: any) => log(` - ${sync.name}`))
 
 const checkPackages = async () => {
