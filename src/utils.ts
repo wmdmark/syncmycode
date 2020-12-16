@@ -7,6 +7,8 @@ export const loadJSON = (filePath: string) => {
   return JSON.parse(data)
 }
 
-export const getBasePath = () => {
-  return path.resolve("./")
+export const getBasePath = (addtionalPath?: string) => {
+  let basePath: string = path.resolve("./")
+  if (addtionalPath) basePath = path.join(basePath, addtionalPath)
+  return basePath
 }
