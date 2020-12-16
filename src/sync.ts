@@ -32,6 +32,11 @@ export const watch = (syncer: any) => {
   })
 }
 
+const isEmptyDir = (path: string) => {
+  const files = fs.readdirSync(path)
+  return files.length === 0
+}
+
 export const diffLocalChanges = (syncer: any) => {
   const local = syncer.destination
   const external = syncer.source
@@ -45,6 +50,23 @@ export const diffLocalChanges = (syncer: any) => {
   })
   const differences = diff.diffSet
     ?.filter((d: any) => d.state !== "equal")
+    .filter((d: any) => {
+      // filter out external empty dirs
+      if (d.type1 === "missing") {
+        if (d.type2 === "directory") {
+          const dirPath = `${d.path2}/${d.name2}`
+          return !isEmptyDir(dirPath)
+        }
+      }
+      // filter out internal empty dirs
+      if (d.type2 === "missing") {
+        if (d.type1 === "directory") {
+          const dirPath = `${d.path1}/${d.name1}`
+          return !isEmptyDir(dirPath)
+        }
+      }
+      return true
+    })
     .map((d: any) => {
       d.isStale = new Date(d.date1) < new Date(d.date2)
       return d
