@@ -16,6 +16,7 @@ import { loadConfig } from "./config"
 
 const log = console.log
 const warn = chalk.keyword("orange")
+let watchers
 
 clear()
 console.log(
@@ -81,10 +82,13 @@ const checkPackages = async () => {
 
 const checkLocalChanges = async () => {
   let diffs: any = []
+
   config.syncers.forEach((syncer: any) => {
-    const differences: any = diffLocalChanges(syncer)
+    const differences: any = diffLocalChanges(syncer)?.filter(
+      (d: any) => d.isStale === false
+    )
     if (differences.length > 0) {
-      log(warn(`Found local changes made to ${syncer.name}`))
+      log(warn(`Found newer local changes made to ${syncer.name}`))
       differences.map((dif: any) => {
         const relPath = path.relative(
           getBasePath(),
@@ -103,7 +107,11 @@ const checkLocalChanges = async () => {
       message: "What do you want to do?",
       choices: [
         { key: "s", name: "Sync local changes back to sources", value: "sync" },
-        { key: "i", name: "Ignore", value: "ignore" },
+        {
+          key: "i",
+          name: "Overwrite local changes with source",
+          value: "ignore",
+        },
       ],
     }
     const answers = await inquirer.prompt([prompt])
@@ -112,7 +120,10 @@ const checkLocalChanges = async () => {
       diffs.map(syncDiffSetBackToExternal)
       log(`✔ Files synced`)
     }
+    return true
   }
+
+  return false
 }
 
 const startSync = () => {
@@ -126,8 +137,6 @@ const startSync = () => {
   )
 }
 
-let watchers
-
 const run = async () => {
   await checkPackages()
   log(`✔ Local package.json looks good`)
@@ -137,7 +146,7 @@ const run = async () => {
 }
 
 const cleanup = () => {
-  watchers.forEach((watcher) => watcher.close())
+  if (watchers) watchers.forEach((watcher) => watcher.close())
 }
 
 const exitSignals = [

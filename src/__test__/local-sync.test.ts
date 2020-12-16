@@ -33,7 +33,7 @@ describe("Local Sync", () => {
     config = loadConfig(`${sourcePath}/local-sync.json`)
     expect(config).toBeDefined()
     expect(config.syncers.length).toEqual(1)
-    expect(config.syncers[0].name).toEqual("ui-lib")
+    expect(config.syncers[0].name).toEqual("some-ui-library")
   })
 
   it("should load a package", () => {
@@ -64,7 +64,7 @@ describe("Local Sync", () => {
     expect(needsPackageSync(diff)).toEqual(false)
   })
 
-  const buttonLocalPath = `${sourcePath}/lib/ui-lib/Button.js`
+  const buttonLocalPath = `${sourcePath}/lib/some-ui-library/Button.js`
   it("should sync external files", async (done) => {
     let watcher: any = await watch(config.syncers[0])
     expect(fs.existsSync(buttonLocalPath)).toEqual(true)
@@ -78,6 +78,7 @@ describe("Local Sync", () => {
     fs.writeFileSync(buttonLocalPath, updatedCode, "utf-8")
     const diffs: any = diffLocalChanges(config.syncers[0])
     expect(diffs.length).toEqual(1)
+    expect(diffs[0].isStale).toEqual(false)
   })
 
   it("should copy source changes back to external", () => {
@@ -86,5 +87,14 @@ describe("Local Sync", () => {
     expect(results.length).toEqual(1)
     diffs = diffLocalChanges(config.syncers[0])
     expect(diffs.length).toEqual(0)
+  })
+
+  it("should detect stale changes", () => {
+    const code = fs.readFileSync(buttonSourcePath, "utf-8")
+    const updatedCode = code.replace("// DONE: ", "// FINSIHED: ")
+    fs.writeFileSync(buttonSourcePath, updatedCode, "utf-8")
+    const diffs: any = diffLocalChanges(config.syncers[0])
+    expect(diffs.length).toEqual(1)
+    expect(diffs[0].isStale).toEqual(true)
   })
 })

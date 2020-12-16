@@ -35,11 +35,20 @@ export const watch = (syncer: any) => {
 export const diffLocalChanges = (syncer: any) => {
   const local = syncer.destination
   const external = syncer.source
+
+  if (!fs.existsSync(local)) return []
+
   const diff = compareSync(local, external, {
     excludeFilter: ".DS_Store",
     compareContent: true,
+    // compareDate: true,
   })
-  const differences = diff.diffSet?.filter((d: any) => d.state !== "equal")
+  const differences = diff.diffSet
+    ?.filter((d: any) => d.state !== "equal")
+    .map((d: any) => {
+      d.isStale = new Date(d.date1) < new Date(d.date2)
+      return d
+    })
   return differences
 }
 

@@ -1,6 +1,7 @@
 {
   "name": "local-sync",
-  "version": "0.0.2",
+  "version": "0.5.0",
+  "author": "Mark Johnson <markjohnson@hey.com>",
   "main": "./lib/index.js",
   "bin": {
     "local-sync": "./lib/index.js"
@@ -9,9 +10,8 @@
     "start": "NODE_ENV=development nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "create": "npm run build && npm run test",
     "build": "tsc -p .",
-    "local": "npm i -g",
-    "test": "jest",
-    "refresh": "rm -rf ./node_modules ./package-lock.json && npm install"
+    "local": "npm uninstall -g local-sync && npm i -g",
+    "test": "jest"
   },
   "devDependencies": {
     "@types/clear": "^0.1.1",
