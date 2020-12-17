@@ -11,8 +11,9 @@ export const loadConfig = (configPath: string) => {
     const pkg = loadPackage(path.normalize(`${root}/package.json`))
     const name = sync.name || pkg.name
     const source = path.join(root, sync.source)
+    const relativeSource = path.join(sync.root, sync.source)
     const destination = path.join(baseDir, sync.destination, `./${name}`)
-    syncers.push({ name, root, source, destination })
+    syncers.push({ name, root, source, destination, relativeSource })
   })
   return { syncers }
 }

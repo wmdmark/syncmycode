@@ -11,8 +11,9 @@ import {
   syncDependencies,
 } from "./packages"
 import { diffLocalChanges, syncDiffSetBackToExternal, watch } from "./sync"
-import { getBasePath } from "./utils"
+import { fileExists, getBasePath } from "./utils"
 import { loadConfig } from "./config"
+import { createVSCodeWorkspace } from "./helpers"
 
 const log = console.log
 const warn = chalk.keyword("orange")
@@ -142,11 +143,31 @@ const startSync = () => {
   )
 }
 
+const checkWorkSpace = async () => {
+  const workspacePath = path.join(baseDir, `syncmycode.code-workspace`)
+  if (!fileExists(workspacePath)) {
+    const prompt = {
+      type: "confirm",
+      name: "createWorkspace",
+      message: "Create Visual Studio Code workspace?",
+      default: true,
+    }
+    const answers = await inquirer.prompt([prompt])
+    if (answers.createWorkspace) {
+      log("Creating workspace...")
+      createVSCodeWorkspace(config.syncers, workspacePath)
+      log(`✔ Workspace created`)
+    }
+  }
+  return true
+}
+
 const run = async () => {
   await checkPackages()
   log(`✔ Local package.json looks good`)
   await checkLocalChanges()
   log(`✔ Local files are synced`)
+  await checkWorkSpace()
   watchers = await startSync()
 }
 

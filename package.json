@@ -16,7 +16,7 @@
     "start": "NODE_ENV=development nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "create": "npm run build && npm run test",
     "build": "tsc -p .",
-    "local": "npm uninstall -g syncmycode && npm i -g",
+    "local": "sudo npm i -g",
     "test": "jest"
   },
   "devDependencies": {

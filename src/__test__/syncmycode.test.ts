@@ -8,6 +8,7 @@ import path from "path"
 import fs from "fs"
 import { loadConfig } from "../config"
 import { diffLocalChanges, syncDiffSetBackToExternal, watch } from "../sync"
+import { createVSCodeWorkspace } from "../helpers"
 
 const sleep = (time: number) => new Promise((r) => setTimeout(r, time))
 
@@ -96,5 +97,10 @@ describe("Local Sync", () => {
     const diffs: any = diffLocalChanges(config.syncers[0])
     expect(diffs.length).toEqual(1)
     expect(diffs[0].isStale).toEqual(true)
+  })
+
+  it("should generate a workspace", () => {
+    const workspace = createVSCodeWorkspace(config.syncers)
+    expect(workspace.folders.length).toEqual(2)
   })
 })
