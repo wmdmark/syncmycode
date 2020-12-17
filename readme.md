@@ -49,7 +49,7 @@ Each syncer should have the following fields:
     {
       "root": "../fire-utils",
       "source": "src",
-      "destination": "./external"
+      "destination": "./lib"
     }
   ]
 }
