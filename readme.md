@@ -5,16 +5,18 @@ Sync My Code is an unorthodox but pragmatic way of sharing code between differen
 
 Here's what it does:
 
-1. *Copies* external project source code to your local project (the actual source code, not build files.)
-2. Checks `package.json` mismatches and lets you know what you need to add or upgrade. Can upgrade for you if you tell it to.
-3. Allows syncing newer changes from your local copy back to the external projects or reverting them back to the external source.
+1. Watches and copies external project source code to your local project.
+2. Checks your local `package.json` for mismatches and optionally updates it for you.
+3. Allows syncing changes from your local copy back to the external projects or reverting them back to the external source.
 
 
 # Why? 
 
-We needed a simple way to share our code libraries across multiple projects (and not just in a mono repo). We wanted a "native" developer experience where the library code changes are immediately built/hot reloaded just like local code. We needed a way to push changes from a local copy back to the source.
+* We needed a simple way to share our code libraries across multiple projects (and not just in a mono repo). 
+* We wanted a "native" developer experience where the library code changes are immediately built/hot reloaded just like local code. 
+* We needed a way to push changes from a local copy back to the source.
 
-There may be a better way to do what we're doing here, but I haven't found any with a good DX (Developer Experience) for our small team of devs. That said, this very well may not scale to larger teams.
+There may be a better way to do what we're doing here, but I haven't found any with a good [DX](https://css-tricks.com/what-is-developer-experience-dx/) for our small team of devs. That said, this very well may not scale to larger teams.
 
 # How
 
@@ -25,7 +27,7 @@ npm install -g @wmdmark/syncmycode
 
 ## 2) Setup a config file
 
-Create a `sync.json` file in the root of the project you want to sync code to. For each external project and an entry to `syncers` section.
+Create a `sync.json` file in the root of the project you want to sync code to. For each external project, add an entry to `syncers` section.
 
 Each syncer should have the following fields:
 
