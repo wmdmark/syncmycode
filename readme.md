@@ -1,4 +1,4 @@
-
+![NPM Version](https://img.shields.io/npm/v/@wmdmark/syncmycode)
 # What
 
 Sync My Code is an unorthodox but pragmatic way of sharing code between different projects and keeping them in sync. Think of it as a poor man's Bit.dev. 
