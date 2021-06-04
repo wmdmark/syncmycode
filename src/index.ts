@@ -28,7 +28,7 @@ program
   .version("0.0.1")
   .description("A CLI for syncing local code")
   .option("-c, --config", "path to config file")
-  .options("-s, --skip", "skip setup prompts");
+  .option("-s, --skip", "skip setup prompts");
 
 program.exitOverride();
 
