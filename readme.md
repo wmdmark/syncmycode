@@ -1,7 +1,8 @@
 ![NPM Version](https://img.shields.io/npm/v/@wmdmark/syncmycode)
+
 # What
 
-Sync My Code is an unorthodox but pragmatic way of sharing code between different projects and keeping them in sync. Think of it as a poor man's Bit.dev. 
+Sync My Code is an unorthodox but pragmatic way of sharing code between different projects and keeping them in sync. Think of it as a poor man's Bit.dev.
 
 Here's what it does:
 
@@ -9,18 +10,18 @@ Here's what it does:
 2. Checks your local `package.json` for mismatches and optionally updates it for you.
 3. Allows syncing changes from your local copy back to the external projects or reverting them back to the external source.
 
+# Why?
 
-# Why? 
-
-* We needed a simple way to share our code libraries across multiple projects (and not just in a mono repo). 
-* We wanted a "native" developer experience where the library code changes are immediately built/hot reloaded just like local code. 
-* We needed a way to push changes from a local copy back to the source.
+- We needed a simple way to share our code libraries across multiple projects (and not just in a mono repo).
+- We wanted a "native" developer experience where the library code changes are immediately built/hot reloaded just like local code.
+- We needed a way to push changes from a local copy back to the source.
 
 There may be a better way to do what we're doing here, but I haven't found any with a good [DX](https://css-tricks.com/what-is-developer-experience-dx/) for our small team of devs. That said, this very well may not scale to larger teams.
 
 # How
 
 ## 1) Install
+
 ```
 npm install -g @wmdmark/syncmycode
 ```
@@ -31,12 +32,12 @@ Create a `sync.json` file in the root of the project you want to sync code to. F
 
 Each syncer should have the following fields:
 
-* **root**: Relative path to the root of the project (where the folder that holds it's `package.json`)
-* **source**: The relative path (from root) that you want to sync source code from
-* **destination**: The folder want to sync the source code to.
-* **name (optional)**: A name for the package in your local project. Defaults to the name in package.json.
+- **root**: Relative path to the root of the project (where the folder that holds it's `package.json`)
+- **source**: The relative path (from root) that you want to sync source code from
+- **destination**: The folder want to sync the source code to.
+- **name (optional)**: A name for the package in your local project. Defaults to the name in package.json.
 
-#### Example: 
+#### Example:
 
 ```json
 {
@@ -56,6 +57,7 @@ Each syncer should have the following fields:
 ```
 
 ## 3) Sync!
+
 Simply run
 
 ```
@@ -65,6 +67,8 @@ syncmycode
 This will check your source paths as well as recommend any changes that need to be made to your local `package.json` projects to support the synced libraries.
 
 You can also specify a different location for the sync config file by adding a `--config my-sync-config.json`.
+
+If you want to disable initial setup prompts (for updates to package.json and creating a VSCode workspace), pass `--skip` as an option.
 
 ## Additonal Tips
 

@@ -1,8 +1,9 @@
 {
   "name": "@wmdmark/syncmycode",
   "description": "A simple way to sync local javascript projects",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "author": "Mark Johnson <wmdmark@gmail.com>",
+  "license": "MIT",
   "main": "./lib/index.js",
   "homepage": "https://github.com/wmdmark/syncmycode",
   "repository": {
